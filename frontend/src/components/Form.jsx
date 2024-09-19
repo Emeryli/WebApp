@@ -5,6 +5,7 @@ import api from "../api"
 import "../styles/Form.css"
 
 function Form({route, method}){
+    const navigate = useNavigate()
     const[username, setUsername] = useState("")
     const[password, setPassword] =useState("")
     const[loading, setLoading]= useState(false)
@@ -17,7 +18,7 @@ function Form({route, method}){
             const res = await api.post(route,{username, password})
             if(method==="login"){
                 localStorage.setItem(ACCESS_TOKEN, res.data.access)
-                localStorage.setItem(ACCESS_TOKEN, res.data.refresh)
+                localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
                 navigate("/")
             }else{
                 navigate("/login")
