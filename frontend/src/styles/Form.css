@@ -54,6 +54,32 @@
     color: rgb(55, 178, 219);
   }
 
+  /* Style for input when there's an error */
+
+
+/* Error message style */
+.error-message {
+  color: red;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* Shaking effect */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.form-input.error {
+  animation: shake 0.5s;
+  border: 2px solid red;
+}
+
 
 
 
