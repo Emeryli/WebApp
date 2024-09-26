@@ -2,6 +2,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Note
+from django import forms
 # create user serializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,7 +17,11 @@ class UserSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields= ["id","title", "content","created_at","author"]
+        fields= ["id","gender","ethnicity", "parental_level_of_education","lunch","test_preparation_course","reading_score","writing_score","created_at","author"]
         extra_kwargs={"author":{"read_only":True}}
         
+        
+        
+'''
 
+'''

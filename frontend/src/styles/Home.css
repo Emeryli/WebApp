@@ -42,8 +42,9 @@ div {
     font-weight: bold;
     margin-top: 10px;
   }
-  
+
   form input,
+  form select,
   form textarea {
     width: 100%;
     padding: 8px;
