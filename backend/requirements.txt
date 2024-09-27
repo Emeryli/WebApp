@@ -11,3 +11,4 @@ python-dotenv
 dill
 pandas
 scikit-learn
+black
