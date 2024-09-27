@@ -12,9 +12,9 @@ function Home() {
     useState("");
   const [lunch, setLunch] = useState("");
   const [test_preparation_course, setTest_preparation_course] = useState("");
-  const [reading_score, setReading_score] = useState(0.0);
-  const [writing_score, setWriting_score] = useState(0.0);
-
+  const [reading_score, setReading_score] = useState(null);
+  const [writing_score, setWriting_score] = useState(null);
+  const [result, setResult] = useState(null);
   const [content, setContent] = useState("");
   const [notes, setNotes] = useState([]);
 
@@ -46,6 +46,38 @@ function Home() {
       .catch((error) => alert(error));
   };
 
+  const getPrediction = async (event) => {
+    event.preventDefault();
+    const requestData = {
+      gender,
+      ethnicity,
+      test_preparation_course,
+      reading_score,
+      writing_score,
+      parental_level_of_education,
+      lunch,
+    };
+  
+    try {
+      const response = await api.post("api/process-data/", requestData);
+      
+      if (response.status === 200 || response.status === 201) {
+        // Check if the result exists in the response data
+        if (response.data && response.data.result) {
+          const result = response.data.result;
+          setResult(result);
+          alert("Prediction received successfully");
+        } else {
+          alert("Received response, but no result found in the data");
+        }
+      } else {
+        alert(`Failed to get prediction. Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert(`Error occurred: ${error.message}`);
+    }
+  };
   // create notes
   const createNotes = (e) => {
     e.preventDefault();
@@ -64,7 +96,6 @@ function Home() {
         else alert("Failed to create note");
         getNotes();
         setGender("");
-        
       })
       .catch((err) => {
         alert(err);
@@ -81,7 +112,13 @@ function Home() {
         })}
       </div>
       <h2>Create a Note</h2>
-      <form onSubmit={createNotes}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          
+          getPrediction(e);
+        }}
+      >
         <label htmlFor="gender">Gender:</label>
         <br />
         <select
@@ -175,7 +212,6 @@ function Home() {
         <input
           onChange={(e) => setReading_score(e.target.value)}
           type="number"
-          step="0.01"
           name="reading_score"
           id="reading_score"
           placeholder="Enter your Reading score"
@@ -189,7 +225,6 @@ function Home() {
         <input
           onChange={(e) => setWriting_score(e.target.value)}
           type="number"
-          step="0.01"
           name="writing_score"
           id="writing_score"
           placeholder="Enter your Writing score"
@@ -198,8 +233,10 @@ function Home() {
           value={writing_score}
         />
         <br />
+
         <input type="submit" value="Submit"></input>
       </form>
+      <div>Result: {result ? result : "Waiting for prediction..."}</div>
     </div>
   );
 }

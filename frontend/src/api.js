@@ -6,7 +6,10 @@ const apiURL ="https://1827ee4c-0510-41b3-90ca-df76be52b36f-dev.e1-us-cdp-2.chor
 
 // create an axios instance
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL : apiURL
+    baseURL: import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL : apiURL,
+    withCredentials: true,
+    xsrfCookieName: 'csrftoken',
+    xsrfHeaderName: 'X-CSRFToken',
 })
 
 api.interceptors.request.use(
