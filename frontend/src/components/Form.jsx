@@ -99,8 +99,6 @@ function Form({ route, method }) {
         </Link>
       )}
 
-      {loading && <LoadingIndicator />}
-
       <button className="form-button" type="submit" disabled={isDisabled}>
         {name}
       </button>

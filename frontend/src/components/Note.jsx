@@ -12,6 +12,7 @@ function Note({ note, onDelete }) {
       <p className="note-test_preparation_course">{note.test_preparation_course}</p>
       <p className="note-reading_score">{note.reading_score}</p>
       <p className="note-writing_score">{note.writing_score}</p>
+      <p className="note-math_score">{note.result}</p>
       <p className="note-date">{formattedDate}</p>
       <button className="delete-button" onClick={() => onDelete(note.id)}>
         Delete

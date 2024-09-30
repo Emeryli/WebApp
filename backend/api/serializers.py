@@ -31,10 +31,16 @@ class NoteSerializer(serializers.ModelSerializer):
             "writing_score",
             "created_at",
             "author",
+            "result",
         ]
         extra_kwargs = {"author": {"read_only": True}}
 
 
-"""
-
-"""
+class InputDataSerializer(serializers.Serializer):
+    gender = serializers.CharField()
+    ethnicity = serializers.CharField()
+    test_preparation_course = serializers.CharField()
+    reading_score = serializers.IntegerField()
+    writing_score = serializers.IntegerField()
+    parental_level_of_education = serializers.CharField()
+    lunch = serializers.CharField()

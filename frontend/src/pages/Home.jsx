@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import api from "../api";
 import Note from "../components/Note";
 import "../styles/Home.css";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 function Home() {
   // const
@@ -17,6 +18,7 @@ function Home() {
   const [result, setResult] = useState(null);
   const [content, setContent] = useState("");
   const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getNotes();
@@ -47,6 +49,7 @@ function Home() {
   };
 
   const getPrediction = async (event) => {
+    setLoading(true);
     event.preventDefault();
     const requestData = {
       gender,
@@ -57,15 +60,15 @@ function Home() {
       parental_level_of_education,
       lunch,
     };
-  
+
     try {
       const response = await api.post("api/process-data/", requestData);
-      
+
       if (response.status === 200 || response.status === 201) {
         // Check if the result exists in the response data
         if (response.data && response.data.result) {
           const result = response.data.result;
-          setResult(result);
+          setResult(Math.round(result));
           alert("Prediction received successfully");
         } else {
           alert("Received response, but no result found in the data");
@@ -76,6 +79,8 @@ function Home() {
     } catch (error) {
       console.error("Error:", error);
       alert(`Error occurred: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
   // create notes
@@ -90,35 +95,34 @@ function Home() {
         writing_score,
         parental_level_of_education,
         lunch,
+        result,
       })
       .then((res) => {
         if (res.status === 201) alert("Note created");
         else alert("Failed to create note");
         getNotes();
-        setGender("");
       })
       .catch((err) => {
         alert(err);
       });
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    getPrediction(e);
+    }
+
+  ;
   // return html
   return (
     <div>
+      
       <div>
-        <h2>Notes</h2>
         {/* render the list of notes  */}
         {notes.map((note) => {
           return <Note note={note} onDelete={deleteNote} key={note.id} />;
         })}
       </div>
-      <h2>Create a Note</h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          
-          getPrediction(e);
-        }}
-      >
+      <form onSubmit={(e)=>handleSubmit(e)}>
         <label htmlFor="gender">Gender:</label>
         <br />
         <select
@@ -218,6 +222,7 @@ function Home() {
           min="0"
           max="100"
           value={reading_score}
+          required
         />
         <br />
         <label htmlFor="writing_score">Writing Score:</label>
@@ -231,12 +236,15 @@ function Home() {
           min="0"
           max="100"
           value={writing_score}
+          required
         />
         <br />
-
-        <input type="submit" value="Submit"></input>
+        <div className="prediction-container">
+          <label>The predicted math score is: {result ? result : "Waiting for prediction..."}</label>
+          <br />
+          <input type="submit" value="Predict"></input>
+        </div>
       </form>
-      <div>Result: {result ? result : "Waiting for prediction..."}</div>
     </div>
   );
 }
